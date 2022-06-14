@@ -7,6 +7,7 @@ const Profile: React.FC = () => {
     console.log(email)
     return (
         <>
+        <h1>This is the profile page</h1>
         <h1>{pwd}</h1>
         </>
     );

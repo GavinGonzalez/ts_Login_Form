@@ -11,9 +11,11 @@ const App: React.FC = () => {
             <Router>
                 <Routes>
                     <Route element={<RestrictedRoute/>}>
-                        <Route path="/" element={<Login/>}/>
+                        <Route path="/profile" element={<Profile/>}/>
+                
                     </Route>
-                    <Route path="/profile" element={<Profile/>}/>
+                    <Route path="/" element={<Login/>}/>
+                    <Route path="*" element={<h1>This route doesn't exist</h1>}/>
                 </Routes>
 
             </Router>

@@ -1,10 +1,11 @@
-import React from "react";
-import {Outlet, Navigate} from "react-router-dom"
+import React, {useContext} from "react";
+import {Outlet, Navigate} from "react-router-dom";
+import {LoginContext} from "./LoginContext"
 
 const RestrictedRoute: React.FC = () => {
-    const isLogged = true
+    const {loggedIn} = useContext(LoginContext);
 
-    return isLogged?<Outlet/>:<Navigate to="/"/>
+    return loggedIn?<Outlet/>:<Navigate to="/"/>
 }
 
 

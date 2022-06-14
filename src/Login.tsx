@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import {LoginContext} from "./LoginContext";
 import {useNavigate} from "react-router-dom";
 
@@ -7,11 +7,18 @@ import {useNavigate} from "react-router-dom";
 
 const Login: React.FC = () => {
 
-    const {email, changeEmail, pwd, changePwd, loggedIn} =  useContext(LoginContext)
+    const {email, changeEmail, pwd, changePwd, loggedIn, changeLogged} =  useContext(LoginContext)
    
+    
+    useEffect(() => {
+
+        }
+    )
+    
+    
     const navigate = useNavigate() 
 
-    //fdgdfg
+    
 
     const handleSubmit = (e: any): void => {
         e.preventDefault()
@@ -27,7 +34,7 @@ const Login: React.FC = () => {
 
         dataBase.forEach((dbUser) => {
             if(email == dbUser.userEmail && password == dbUser.userPwd) {
-                changeEmail("fjhed")
+                changeLogged(true)
                 console.log("user found")
             }
         })
@@ -38,8 +45,8 @@ const Login: React.FC = () => {
     return( 
     <>
         <form onSubmit={handleSubmit}>
-            <input  value={email} onChange={data => changeEmail(data.target.value)}/>
-            <input  value={pwd} onChange={data => changePwd(data.target.value)}/>
+            <input required value={email} onChange={data => changeEmail(data.target.value)}/>
+            <input required value={pwd} onChange={data => changePwd(data.target.value)}/>
             <button type="submit" onClick={() => searchDataBase(email, pwd)}>submit</button>
         </form>
     </>

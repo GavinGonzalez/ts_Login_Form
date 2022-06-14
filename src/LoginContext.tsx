@@ -8,7 +8,8 @@ interface userData {
     pwd: string,
     changeEmail: (email:string) => void,
     changePwd: (pwd:string) => void,
-    loggedIn: boolean 
+    loggedIn: boolean,
+    changeLogged: (a: boolean) => void
 }
 
 let defaultState: userData = {
@@ -16,7 +17,8 @@ let defaultState: userData = {
     pwd: "",
     changeEmail: (a: string) => console.log(a),
     changePwd: (a: string) => console.log(a),
-    loggedIn: false
+    loggedIn: false,
+    changeLogged: (a: boolean) => console.log(a)
 }
 
 export let LoginContext = createContext<userData>(defaultState)
@@ -29,7 +31,7 @@ export const LoginProvider: React.FC<Props> = ({children}) => {
     
     const [email, changeEmail] = useState<string>("");
     const [pwd, changePwd] = useState<string>("");
-
+    const [loggedIn, changeLogged] = useState<boolean>(false)
    
     return(
         <LoginContext.Provider value={{
@@ -37,7 +39,8 @@ export const LoginProvider: React.FC<Props> = ({children}) => {
             pwd,
             changeEmail,
             changePwd,
-            loggedIn: false
+            loggedIn,
+            changeLogged
             }}>
             {children}
         </LoginContext.Provider>
