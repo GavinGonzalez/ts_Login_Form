@@ -1,11 +1,20 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import {Outlet, Navigate} from "react-router-dom";
 import {LoginContext} from "./LoginContext"
 
 const RestrictedRoute: React.FC = () => {
-    const {loggedIn} = useContext(LoginContext);
+    const {loggedIn, changeLogged} = useContext(LoginContext);
 
-    return loggedIn?<Outlet/>:<Navigate to="/"/>
+    useEffect(() => {
+        console.log(localStorage.getItem("log"))
+        changeLogged(false)
+        
+        
+    }
+)
+
+
+    return false?<Outlet/>:<Navigate to="/"/>
 }
 
 

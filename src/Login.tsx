@@ -9,14 +9,11 @@ const Login: React.FC = () => {
 
     const {email, changeEmail, pwd, changePwd, loggedIn, changeLogged} =  useContext(LoginContext)
    
-    
-    useEffect(() => {
-
-        }
-    )
-    
-    
     const navigate = useNavigate() 
+
+   
+    
+    
 
     
 
@@ -27,17 +24,25 @@ const Login: React.FC = () => {
  
 
     const searchDataBase = (email:string, password:string) => {
-        const dataBase = [
-            {userEmail: "g", userPwd: "y"},
-            {userEmail: "blakeGay@gmail.com", userPwd: "66738"}
-        ];
+       
+            if(email == "o" && password=="o") {
+                
 
-        dataBase.forEach((dbUser) => {
-            if(email == dbUser.userEmail && password == dbUser.userPwd) {
-                changeLogged(true)
-                console.log("user found")
+                fetch(
+                    "http://localhost:3001",
+                    {
+                        method: "GET",
+                        
+                    }
+                ).then(response => {
+                    return response.text();
+                }).then(data => {
+                    return data;
+                }).catch(err => {
+                    return err;
+                })
             }
-        })
+    
     }
    
     console.log("logged: ", pwd)
