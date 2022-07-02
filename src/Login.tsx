@@ -2,7 +2,7 @@ import React, {useState, useContext, useEffect} from "react";
 import {LoginContext} from "./LoginContext";
 import {useNavigate} from "react-router-dom";
 
-
+import axios from 
 
 
 const Login: React.FC = () => {
@@ -25,22 +25,11 @@ const Login: React.FC = () => {
 
     const searchDataBase = (email:string, password:string) => {
        
-            if(email == "o" && password=="o") {
-                
+            if(email == "o" && password == "o") {
+               
 
-                fetch(
-                    "http://localhost:3001",
-                    {
-                        method: "GET",
-                        
-                    }
-                ).then(response => {
-                    return response.text();
-                }).then(data => {
-                    return data;
-                }).catch(err => {
-                    return err;
-                })
+
+                
             }
     
     }

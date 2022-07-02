@@ -5,16 +5,11 @@ import {LoginContext} from "./LoginContext"
 const RestrictedRoute: React.FC = () => {
     const {loggedIn, changeLogged} = useContext(LoginContext);
 
-    useEffect(() => {
-        console.log(localStorage.getItem("log"))
-        changeLogged(false)
-        
-        
-    }
-)
+    
 
 
-    return false?<Outlet/>:<Navigate to="/"/>
+
+    return loggedIn?<Outlet/>:<Navigate to="/"/>
 }
 
 
