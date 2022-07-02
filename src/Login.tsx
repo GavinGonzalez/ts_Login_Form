@@ -1,14 +1,19 @@
 import React, {useState, useContext, useEffect} from "react";
 import {LoginContext} from "./LoginContext";
 import {useNavigate} from "react-router-dom";
-
+import axios from "axios";
+import {useCookies} from "react-cookie";
+import {Buffer} from 'buffer';
+import decodePayload from "./util/JWT";
 
 
 
 const Login: React.FC = () => {
 
     const {email, changeEmail, pwd, changePwd, loggedIn, changeLogged} =  useContext(LoginContext)
-   
+    const [cookies, setCookies] = useCookies();
+
+
     const navigate = useNavigate() 
 
    
@@ -19,34 +24,44 @@ const Login: React.FC = () => {
 
     const handleSubmit = (e: any): void => {
         e.preventDefault()
-        navigate("/profile")
+        
     }
+
+    
  
 
     const searchDataBase = (email:string, password:string) => {
        
-            if(email == "o" && password=="o") {
-                
+        fetch("http://localhost:3001/login",
+        {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email,  password}),
+            credentials: "include"
+        }).then(data => {
+            navigate("/profile")
+        }).catch(err => {
+            console.log(err)
+        })
 
-                fetch(
-                    "http://localhost:3001",
-                    {
-                        method: "GET",
-                        
-                    }
-                ).then(response => {
-                    return response.text();
-                }).then(data => {
-                    return data;
-                }).catch(err => {
-                    return err;
-                })
-            }
+
+        
+        
+        //console.log(decodePayload(cookies.token).data)
+        }
+        
+        
+        
+             
+        
+        
+
     
-    }
    
-    console.log("logged: ", pwd)
-
+    //console.log("logged: ", cookies.jwt)
+    
     return( 
     <>
         <form onSubmit={handleSubmit}>
