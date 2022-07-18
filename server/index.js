@@ -1,34 +1,21 @@
-let express = require('express');
-
-let app = express();
-
-let cors = require("cors");
-let {createToken} = require("./JWT")
-
-//let {createJwt, verifyToken} = require( "../jwts/gavJWT");
-
-//let session = require("express-session")
-
-//let genuuid = require('uuidv4')
-
+let express = require('express')
+let app = express()
 let cookieParser = require("cookie-parser")
+let createToken = require("../server/JWT")
+let cors = require("cors");
+let db = require("./db")
+
+
 
 //let db = require("./db/dbConnection")
 
 //const crypto = require ("crypto");
 app.use(express.json());
-
 app.use(cors({
-
-    origin: ["http://localhost:3000"],
-
-    methods: ["GET", "POST"],
-    exposedHeaders: ["set-cookie"],
-
+    origin: "http://localhost:3000",
     credentials: true
-
-}));
-
+}))
+app.use(express.urlencoded({extended: false}))
 app.use(cookieParser());
 
 app.use(express.urlencoded({
@@ -107,6 +94,10 @@ b. express.urlencoded() is a method inbuilt in express to recognize the incoming
 
 */
 
+app.listen(3001, () => {
+    console.log("server has started on port 3001")
+})
+
 app.get('/', function (req, res) {
 
     
@@ -115,85 +106,75 @@ app.get('/', function (req, res) {
 });
 
 
+app.post("/location", function(req, res) {
+    let lat = req.body.lat;
+    let lng = req.body.lng;
 
-app.post("/login",  function (req, res) {
+    res.cookie("location", {lat, lng});
+    console.log("location sent: ", lat)
+    res.status(200).json({msg: "cookie sent"})
+})
 
+
+
+app.post("/login", function(req, res) {
     
+    let email = req.body.email;
+    let pwd = req.body.password;
 
-    const email = req.body.email;
+    console.log(`from signin route: ${email}, ${pwd}`);
 
-    const password = req.body.pwd;
+    db.query("SELECT * FROM users where email=? AND password=?", [email, pwd], (err, result) => {
 
-
-
-    db.query("SELECT id FROM users WHERE email=? AND password=?", [email, password], (err, result) => {
-
-
+        if(result.length > 0) {
+            let token = createToken({payload: {username: result[0].username, email: result[0].email, loggedIn: true}}, "secret-key")
+            console.log("ss: ", token)
+            res.cookie("token", token);
+            res.status(200).json({msg: "cookie sent"})
+        } else {
+            res.send("user already exists")
+        }
     })
-
 });
-
-
-
-
 
 app.post("/signup", function(req, res) {
 
+    let username = req.body.username;
+    let email = req.body.email;
+    let pwd = req.body.password;
 
+    console.log(`${username},${email}, ${pwd}`);
 
-    const email = req.body.email;
+    db.query("SELECT id FROM users where username=? OR email=? OR password=?", [username, email, pwd], (err, result) => {
 
-    const password = req.body.pwd;
+        if(result.length == 0) {
+                console.log("kell: "+JSON.stringify(result))
+                db.query("INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+            [username, email, pwd], (err, result) => {
+                
+                if(err) {
+                    console.log(err)
 
+                } else {
 
-    req.session.email = email;
-
-    req.session.password = password;
-
-    res.send(req.session.email);
-
-    
-
-    /*
-
-    db.query("SELECT id FROM users WHERE email=? AND password=?", [email, password], (err, result) => {
-
+                    let token = createToken({payload: {username, email, loggedIn: true}}, "secret-key")
+                    console.log("styts: ", token)
+                    res.cookie("token", token);
+                    res.status(200).json({msg: "cookie sent"})
+                
+                }
+            })
+        } else {
+            res.send("user already exists")
+        }
 
     });
-
+    
+    /*
+    let jwt = createToken({data: "hello this server"}, "key")
+    res.cookie("jwt", jwt);
+    res.status(200).json({msg: "cookie sent"})
     */
-
-})
-
-
-app.post("/submit", function(req, res) {
-
-
-
-    const email = req.body.email;
-
-    res.cookie("cookie", "hello")
-    console.log("cookie sent")
-
-})
-
-
-
-
-
-app.post("/pre", function(req, res) {
-
-    res.json(req.cookies)
-
-})
-
-
-
-
-var server = app.listen(3002, function () {
-
-    console.log("server is listening on port 3001");
-
 });
 
 
